@@ -27,7 +27,7 @@ Cada rama entra a `main` con un pull request.
 
 ## Servicio de predicción de enfermedades
 
-Servicio web donde un médico ingresa los datos de un paciente y obtiene uno de cuatro estados: `NO ENFERMO`, `ENFERMEDAD LEVE`, `ENFERMEDAD AGUDA` o `ENFERMEDAD CRÓNICA`.
+Servicio web donde un médico ingresa los datos de un paciente y obtiene uno de cinco estados: `NO ENFERMO`, `ENFERMEDAD LEVE`, `ENFERMEDAD AGUDA`, `ENFERMEDAD CRÓNICA` o `ENFERMEDAD TERMINAL`.
 
 El modelo está simulado con reglas en `app/modelo.py`. Se puede usar desde un formulario web o con la API en `POST /predecir`.
 
@@ -48,7 +48,7 @@ Se calcula un puntaje de severidad:
 - Frecuencia cardíaca: 1 punto sobre 100 y 2 sobre 120.
 - Dolor: 1 punto desde 1, 2 desde 4 y 3 desde 7.
 
-Con puntaje 0 el estado es `NO ENFERMO`. Si no, 90 días o más de síntomas da `ENFERMEDAD CRÓNICA`, un puntaje de 5 o más da `ENFERMEDAD AGUDA` y el resto da `ENFERMEDAD LEVE`.
+Con puntaje 0 el estado es `NO ENFERMO`. Si no, 90 días o más de síntomas con puntaje de 7 o más da `ENFERMEDAD TERMINAL`, 90 días o más con un puntaje menor da `ENFERMEDAD CRÓNICA`, un puntaje de 5 o más da `ENFERMEDAD AGUDA` y el resto da `ENFERMEDAD LEVE`.
 
 ### Construir la imagen
 
@@ -92,6 +92,7 @@ Valores de ejemplo para cada estado:
 | 37.8 | 85 | 3 | 2 | ENFERMEDAD LEVE |
 | 39.5 | 125 | 8 | 3 | ENFERMEDAD AGUDA |
 | 37.0 | 80 | 5 | 180 | ENFERMEDAD CRÓNICA |
+| 39.5 | 125 | 8 | 200 | ENFERMEDAD TERMINAL |
 
 ### Detener el contenedor
 
