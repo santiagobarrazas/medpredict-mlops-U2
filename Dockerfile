@@ -9,8 +9,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app/ app/
 
-RUN useradd --create-home --uid 1000 medico
+RUN useradd --create-home --uid 1000 medico \
+    && mkdir datos && chown medico datos
 USER medico
+
+ENV REGISTRO_PREDICCIONES=/servicio/datos/predicciones.jsonl
+VOLUME /servicio/datos
 
 EXPOSE 5000
 

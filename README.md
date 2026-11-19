@@ -29,7 +29,7 @@ Cada rama entra a `main` con un pull request.
 
 Servicio web donde un médico ingresa los datos de un paciente y obtiene uno de cinco estados: `NO ENFERMO`, `ENFERMEDAD LEVE`, `ENFERMEDAD AGUDA`, `ENFERMEDAD CRÓNICA` o `ENFERMEDAD TERMINAL`.
 
-El modelo está simulado con reglas en `app/modelo.py`. Se puede usar desde un formulario web o con la API en `POST /predecir`.
+El modelo está simulado con reglas en `app/modelo.py`. Se puede usar desde un formulario web o con la API en `POST /predecir`. Cada predicción queda registrada y `GET /estadisticas` devuelve un reporte con esos registros.
 
 ### Entradas
 
@@ -66,6 +66,12 @@ docker run -d --name prediccion -p 5000:5000 prediccion-enfermedades:1.0
 
 Si el puerto 5000 está ocupado, cambie el primer número, por ejemplo `-p 8080:5000`.
 
+Las predicciones se guardan en `/servicio/datos/predicciones.jsonl` dentro del contenedor. Para conservarlas aunque se borre el contenedor, monte un volumen:
+
+```bash
+docker run -d --name prediccion -p 5000:5000 -v prediccion-datos:/servicio/datos prediccion-enfermedades:1.0
+```
+
 ### Obtener una predicción
 
 En el navegador, abra <http://localhost:5000/>, llene los campos y presione Predecir.
@@ -93,6 +99,31 @@ Valores de ejemplo para cada estado:
 | 39.5 | 125 | 8 | 3 | ENFERMEDAD AGUDA |
 | 37.0 | 80 | 5 | 180 | ENFERMEDAD CRÓNICA |
 | 39.5 | 125 | 8 | 200 | ENFERMEDAD TERMINAL |
+
+### Estadísticas de predicciones
+
+En el navegador, abra <http://localhost:5000/estadisticas> o use el enlace debajo del formulario. Con la API:
+
+```bash
+curl http://localhost:5000/estadisticas
+```
+
+Respuesta:
+
+```json
+{
+  "fecha_ultima_prediccion": "2026-11-19T21:29:15",
+  "total_por_categoria": {"ENFERMEDAD AGUDA": 1, "ENFERMEDAD CRÓNICA": 0, "ENFERMEDAD LEVE": 0, "ENFERMEDAD TERMINAL": 0, "NO ENFERMO": 0},
+  "total_predicciones": 1,
+  "ultimas_predicciones": [
+    {"entradas": {"dias_sintomas": 3.0, "dolor": 8.0, "frecuencia_cardiaca": 125.0, "temperatura": 39.5}, "estado": "ENFERMEDAD AGUDA", "fecha": "2026-11-19T21:29:15", "puntaje_severidad": 8}
+  ]
+}
+```
+
+- `total_por_categoria`: número de predicciones de cada estado.
+- `ultimas_predicciones`: las 5 más recientes, de la más nueva a la más antigua.
+- `fecha_ultima_prediccion`: fecha y hora (UTC dentro del contenedor) de la última predicción, o `null` si no hay ninguna.
 
 ### Detener el contenedor
 
