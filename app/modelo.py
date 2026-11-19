@@ -4,9 +4,11 @@ NO_ENFERMO = "NO ENFERMO"
 LEVE = "ENFERMEDAD LEVE"
 AGUDA = "ENFERMEDAD AGUDA"
 CRONICA = "ENFERMEDAD CRÓNICA"
+TERMINAL = "ENFERMEDAD TERMINAL"
 
 DIAS_CRONICO = 90
 PUNTAJE_AGUDO = 5
+PUNTAJE_TERMINAL = 7
 
 RANGOS = {
     "temperatura": (34.0, 43.0),
@@ -73,6 +75,8 @@ def predecir(temperatura: float, frecuencia_cardiaca: float, dolor: float, dias_
     )
     if puntaje == 0:
         estado = NO_ENFERMO
+    elif dias_sintomas >= DIAS_CRONICO and puntaje >= PUNTAJE_TERMINAL:
+        estado = TERMINAL
     elif dias_sintomas >= DIAS_CRONICO:
         estado = CRONICA
     elif puntaje >= PUNTAJE_AGUDO:
