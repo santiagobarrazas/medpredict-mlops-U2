@@ -24,6 +24,8 @@
     .ENFERMEDAD-AGUDA { background: #fde3e1; color: #a12a1f; }
     .ENFERMEDAD-CRÓNICA { background: #ece3f8; color: #5b2d91; }
     .ENFERMEDAD-TERMINAL { background: #2b2b2b; color: #fff; }
+    .enlace { margin-top: 16px; text-align: center; font-size: .9rem; }
+    .enlace a { color: var(--azul); }
     .error { margin-top: 20px; padding: 12px; border-radius: 8px; background: #fde3e1; color: #a12a1f; }
   </style>
 </head>
@@ -59,6 +61,7 @@
       </div>
     {% endif %}
     {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <p class="enlace"><a href="/estadisticas">Ver estadísticas de predicciones</a></p>
   </div>
 </main>
 </body>
