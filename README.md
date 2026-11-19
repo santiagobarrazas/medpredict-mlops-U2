@@ -23,7 +23,28 @@ Mantener ese servicio bajo control de versiones en GitHub y llevar los cambios a
 2. Ramas de nuevos requerimientos: nueva categoría de predicción y reporte de estadísticas.
 3. `añadir-github-actions`: pipeline de CI/CD.
 
-Cada rama entra a `main` con un pull request.
+Cada rama entra a `main` con un pull request. La rama `main` está protegida: no acepta commits directos y exige que el check `pruebas` pase antes del merge.
+
+## CI/CD
+
+El workflow está en `.github/workflows/ci-cd.yaml`.
+
+En cada pull request contra `main`:
+
+1. Comenta en el PR "CI/CD en acción. Ejecutando tareas …".
+2. Corre las pruebas unitarias con pytest (job `pruebas`).
+3. Si pasan, comenta "CI/CD terminado con éxito.".
+
+En cada commit a `main` (merge de un PR):
+
+1. Vuelve a correr las pruebas.
+2. Construye la imagen de Docker y la publica en GitHub Packages como `ghcr.io/santiagobarrazas/medpredict-mlops-u2` con las etiquetas `latest` y `sha-<commit>`.
+
+Para usar la imagen publicada:
+
+```bash
+docker run -d --name prediccion -p 5000:5000 ghcr.io/santiagobarrazas/medpredict-mlops-u2:latest
+```
 
 ## Servicio de predicción de enfermedades
 
